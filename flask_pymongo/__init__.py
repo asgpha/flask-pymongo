@@ -144,6 +144,11 @@ class PyMongo(object):
             app.config[key('SOCKET_TIMEOUT_MS')] = parsed['options'].get('sockettimeoutms', None)
             app.config[key('CONNECT_TIMEOUT_MS')] = parsed['options'].get('connecttimeoutms', None)
             app.config[key('SERVER_SELECTION_TIMEOUT_MS')] = parsed['options'].get('serverselectiontimeoutms', None)
+            app.config[key('SSL')] = parsed['options'].get('ssl', False)
+            app.config[key('SSL_CERT_REQS')] = parsed['options'].get('ssl_cert_reqs', 2)
+            app.config[key('SSL_CA_CERTS')] = parsed['options'].get('ssl_ca_certs', None)
+            app.config[key('SSL_CRLFILE')] = parsed['options'].get('ssl_crlfile', None)
+            app.config[key('SSL_CERTFILE')] = parsed['options'].get('ssl_certfile', None)
 
             if pymongo.version_tuple[0] < 3:
                 app.config[key('AUTO_START_REQUEST')] = parsed['options'].get('auto_start_request', True)
@@ -171,6 +176,11 @@ class PyMongo(object):
             app.config.setdefault(key('READ_PREFERENCE'), None)
             app.config.setdefault(key('SOCKET_TIMEOUT_MS'), None)
             app.config.setdefault(key('CONNECT_TIMEOUT_MS'), None)
+            app.config.setdefault(key('SSL'), False)
+            app.config.setdefault(key('SSL_CERT_REQS'), None)
+            app.config.setdefault(key('SSL_CA_CERTS'), None)
+            app.config.setdefault(key('SSL_CRLFILE'), None)
+            app.config.setdefault(key('SSL_CERTFILE'), None)
 
             if pymongo.version_tuple[0] < 3:
                 app.config.setdefault(key('AUTO_START_REQUEST'), True)
@@ -270,6 +280,13 @@ class PyMongo(object):
 
         if document_class is not None:
             kwargs['document_class'] = document_class
+
+        if app.config[key('SSL')]:
+            ssl_opts = ['ssl_cert_reqs', 'ssl_ca_certs', 'ssl_certfile',
+                        'ssl_crlfile', 'ssl']
+            for ssl_opt in ssl_opts:
+                if app.config[key(ssl_opt.upper())]:
+                    kwargs[ssl_opt] = app.config[key(ssl_opt.upper())]
 
         cx = connection_cls(*args, **kwargs)
         db = cx[dbname]
