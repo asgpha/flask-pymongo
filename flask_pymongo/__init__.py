@@ -283,12 +283,12 @@ class PyMongo(object):
             kwargs['document_class'] = document_class
 
         if app.config[key('SSL')]:
-            logging.debug('Connection to mongo prefix %s with ssl', config_prefix)
+            logging.debug('Connection to %s with ssl', config_prefix)
             ssl_opts = ['ssl_cert_reqs', 'ssl_ca_certs', 'ssl_certfile',
                         'ssl_crlfile', 'ssl']
             for ssl_opt in ssl_opts:
-                if app.config[key(ssl_opt.upper())] or app.config[key(ssl_opt.upper())] == 0:
-                    logging.debug('Setting kwarg option %s to %s', ssl_opt, app.config[key(ssl_opt.upper())])
+                if (app.config[key(ssl_opt.upper())] or
+                    app.config[key(ssl_opt.upper())] == 0):
                     kwargs[ssl_opt] = app.config[key(ssl_opt.upper())]
 
         cx = connection_cls(*args, **kwargs)
