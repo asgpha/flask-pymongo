@@ -287,7 +287,7 @@ class PyMongo(object):
             ssl_opts = ['ssl_cert_reqs', 'ssl_ca_certs', 'ssl_certfile',
                         'ssl_crlfile', 'ssl']
             for ssl_opt in ssl_opts:
-                if app.config[key(ssl_opt.upper())]:
+                if app.config[key(ssl_opt.upper())] or app.config[key(ssl_opt.upper())] == 0:
                     logging.debug('Setting kwarg option %s to %s', ssl_opt, app.config[key(ssl_opt.upper())])
                     kwargs[ssl_opt] = app.config[key(ssl_opt.upper())]
 
