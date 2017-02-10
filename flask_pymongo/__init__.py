@@ -26,6 +26,7 @@
 
 __all__ = ('PyMongo', 'ASCENDING', 'DESCENDING')
 
+import logging
 from bson.errors import InvalidId
 from bson.objectid import ObjectId
 from flask import abort, current_app, request
@@ -282,6 +283,7 @@ class PyMongo(object):
             kwargs['document_class'] = document_class
 
         if app.config[key('SSL')]:
+            logging.debug('Connection to mongo prefix %s with ssl', config_prefix)
             ssl_opts = ['ssl_cert_reqs', 'ssl_ca_certs', 'ssl_certfile',
                         'ssl_crlfile', 'ssl']
             for ssl_opt in ssl_opts:
